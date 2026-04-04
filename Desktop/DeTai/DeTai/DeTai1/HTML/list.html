@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh mục sản phẩm</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../CSS/style.css" />
+
+    <style>
+      /* ====== HIỆU ỨNG GIỎ HÀNG ====== */
+      .fly-cart-icon {
+        position: fixed;
+        z-index: 9999;
+        font-size: 22px;
+        pointer-events: none;
+        transition: transform 1.5s ease, opacity 1.5s ease;
+        color: #111;
+      }
+      .cart-pop {
+        animation: cartPop 0.2s ease;
+      }
+      @keyframes cartPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.25); }
+        100% { transform: scale(1); }
+      }
+
+      /* ====== CỘT DANH MỤC ====== */
+      .categories-slider-section .row.g-4 { align-items: flex-start; }
+
+      .categories-box { padding: 16px !important; }
+
+      .categories-box .category-item { margin-bottom: 6px !important; }
+
+      .categories-box .category-item a { padding: 6px 0; font-size: 14px; }
+
+      .categories-box .category-title { font-size: 18px; margin-bottom: 12px !important; }
+
+      .categories-box .btn { padding: 6px 12px; font-size: 14px; }
+
+      /* ====== SẢN PHẨM ĐỀU NHAU (CARD + ẢNH + NÚT) ====== */
+      .product-item { display: flex; }
+
+      .product-item .thumbnail.card {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .product-item .thumbnail.card > a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .product-item .thumbnail.card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .product-item .caption {
+        flex: 1;
+        padding: 12px 12px 6px !important;
+      }
+
+      .product-item .proName {
+        font-weight: 600;
+        line-height: 1.3;
+        min-height: 2.6em; /* ~2 dòng */
+        overflow: hidden;
+      }
+
+      .product-item .proList { min-height: 1.4em; overflow: hidden; }
+
+      .product-item .proPrice { min-height: 1.6em; }
+
+      .product-item .thumbnail.card .px-3.pb-3 { margin-top: auto; }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 sticky-top shadow">
+      <div class="container">
+        <a class="navbar-brand fw-bold fs-4 brand-logo" href="trangchu.html#home">
+          Fashion Store
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNav"
+          aria-controls="mainNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active px-3" aria-current="page" href="trangchu.html#home">Trang Chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-3" href="trangchu.html#about">Giới Thiệu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-3" href="trangchu.html#collections">Bộ Sưu Tập</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link px-3" href="trangchu.html#contact">Liên Hệ</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Thêm
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="accessories.html">Phụ Kiện</a></li>
+                <li><a class="dropdown-item" href="promotions.html">Khuyến Mãi</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="news.html">Tin Tức</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <div class="d-flex gap-3 align-items-center text-white">
+            <a href="#" class="text-white text-decoration-none" title="Tìm kiếm">
+              <i class="bx bx-search fs-5"></i>
+            </a>
+            <a href="#" class="text-white text-decoration-none" title="Tài khoản">
+              <i class="bx bx-user fs-5"></i>
+            </a>
+
+            <a href="giohang.html" class="text-white text-decoration-none position-relative" title="Giỏ hàng">
+              <i id="nav-cart-icon" class="bx bx-cart fs-5"></i>
+              <span
+                id="nav-cart-count"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge"
+              >0</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="categories-slider-section">
+      <div class="container">
+        <div class="row g-4">
+          <!-- LEFT: DANH MỤC -->
+          <div class="col-lg-3 col-md-4">
+            <div class="categories-box bg-light rounded-4 p-4 shadow-sm h-100">
+              <h4 class="fw-bold mb-4 category-title">
+                <i class="bx bx-category-alt me-2"></i>
+                Danh Mục
+              </h4>
+
+              <ul class="category-list list-unstyled">
+                <li class="category-item mb-2">
+                  <a href="list.html?category=nam" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Thời Trang Nam</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=nu" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Thời Trang Nữ</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=tre-em" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Thời Trang Trẻ Em</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=ao-khoac-vest" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Áo Khoác & Vest</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=tui-xach" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Túi Xách</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=dong-ho" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Đồng Hồ</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=kinh-mat" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Kính Mắt</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=giay-dep" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Giày Dép</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+                <li class="category-item mb-2">
+                  <a href="list.html?category=phu-kien-khac" class="d-flex align-items-center justify-content-between text-decoration-none">
+                    <span>Phụ Kiện Khác</span><i class="bx bx-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+
+              <div class="mt-4 pt-3 border-top">
+                <a href="list.html" class="btn btn-outline-dark btn-sm w-100 rounded-pill">Xem Tất Cả</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: LIST SẢN PHẨM -->
+          <div class="col-lg-9 col-md-8 section-all-product">
+            <div class="container">
+              <h3 class="text-center">Danh mục sản phẩm</h3>
+              <br />
+
+              <div class="row g-4 my-r">
+                <!-- ===== NAM (3 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nam">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/thoitrang1.png" alt="Levis dri-FIT" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Sơ Mi Nam Form Rộng</div>
+                        <div class="proList text-muted">Áo thun nam</div>
+                        <div class="proPrice"><span class="afterDis">250.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(201, 'Áo Thun Nam Form Rộng', 250000, '../IMG/p1.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nam">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/thoitrang2.png" alt="Levis Stripes" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Sơ Mi Denim Nam</div>
+                        <div class="proList text-muted">Áo thun nam</div>
+                        <div class="proPrice"><span class="afterDis">320.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(202, 'Áo Sơ Mi Nam Denim', 320000, '../IMG/p2.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nam">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/thoitrang3.png" alt="Jack & Jones" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Polo Nam Tay Dài</div>
+                        <div class="proList text-muted">Áo thun nam</div>
+                        <div class="proPrice"><span class="afterDis">450.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(203, 'Áo Polo Nam Tay Dài', 450000, '../IMG/p44.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== NỮ (3 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nu">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/CandyTopRR25AT31.webp" alt="Suit Nữ Màu Hồng" />
+                      <div class="caption text-center">
+                        <div class="proName">Set Áo Len + Quần Jean Ống Rộng</div>
+                        <div class="proList text-muted">Thời trang nữ</div>
+                        <div class="proPrice"><span class="afterDis">1.800.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(204, 'Set Áo Len + Quần Jean Ống Rộng', 1800000, '../IMG/featured1.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nu">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/aodanu.png" alt="Áo Khoác Dạ Nữ" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Khoác Dạ Nữ</div>
+                        <div class="proList text-muted">Thời trang nữ</div>
+                        <div class="proPrice"><span class="afterDis">1.500.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(205, 'Áo Khoác Dạ Nữ', 1500000, '../IMG/featured2.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="nu">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/aothunnu.png" alt="H&M Regular Fit" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Thun Nữ Basic</div>
+                        <div class="proList text-muted">Thời trang nữ</div>
+                        <div class="proPrice"><span class="afterDis">360.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(220, 'H&M Regular Fit', 360000, '../IMG/p3.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== TRẺ EM (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="tre-em">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/nguoinhen.png" alt="Thời Trang Trẻ Em 1" />
+                      <div class="caption text-center">
+                        <div class="proName"> áo khoác có mũ Spider-Man</div>
+                        <div class="proList text-muted">Trẻ em</div>
+                        <div class="proPrice"><span class="afterDis">250.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(206, 'Thời Trang Trẻ Em 1', 250000, '../IMG/couple.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="tre-em">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/nguoinhen1.png" alt="Thời Trang Trẻ Em 2" />
+                      <div class="caption text-center">
+                        <div class="proName">bộ đồ Spider-Man </div>
+                        <div class="proList text-muted">Trẻ em</div>
+                        <div class="proPrice"><span class="afterDis">220.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(207, 'Thời Trang Trẻ Em 2', 220000, '../IMG/bag.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== ÁO KHOÁC & VEST (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="ao-khoac-vest">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/BlackFormRegularAK076.png" alt="Áo Khoác 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Áo Khoác Dạ Ngắn Cổ Tròn</div>
+                        <div class="proList text-muted">Áo Khoác & Vest</div>
+                        <div class="proPrice"><span class="afterDis">1.250.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(208, 'Áo Khoác 1', 1250000, '../IMG/jacket.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="ao-khoac-vest">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/vest.png" alt="Áo Khoác 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Blazer Nam Slim Fit</div>
+                        <div class="proList text-muted">Áo Khoác & Vest</div>
+                        <div class="proPrice"><span class="afterDis">1.950.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(209, 'Áo Khoác 2', 1950000, '../IMG/sale.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== TÚI XÁCH (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="tui-xach">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/FinenessReEditTopL.webp" alt="Túi Tote 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Túi Tote Da Đen </div>
+                        <div class="proList text-muted">Túi xách</div>
+                        <div class="proPrice"><span class="afterDis">150.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(210, 'Túi Tote 1', 150000, '../IMG/bag.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="tui-xach">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/tuixach.png" alt="Túi Tote 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Túi Đeo Vai Mini Hobo</div>
+                        <div class="proList text-muted">Túi xách</div>
+                        <div class="proPrice"><span class="afterDis">180.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(211, 'Túi Tote 2', 180000, '../IMG/bag.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="dong-ho">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/dongho.png" alt="Đồng Hồ 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Đồng Hồ Steel Diamond</div>
+                        <div class="proList text-muted">Đồng hồ</div>
+                        <div class="proPrice"><span class="afterDis">2.500.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(212, 'Đồng Hồ 1', 2500000, '../IMG/watch.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="dong-ho">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/CitizenNJ0153-82X.webp" alt="Đồng Hồ 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Đồng Hồ Golden Red Face</div>
+                        <div class="proList text-muted">Đồng hồ</div>
+                        <div class="proPrice"><span class="afterDis">1.900.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(213, 'Đồng Hồ 2', 1900000, '../IMG/watch.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== KÍNH MẮT (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="kinh-mat">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/kinhmat1.png" alt="Kính Mắt 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Kính Gọng Tròn Retro</div>
+                        <div class="proList text-muted">Kính mắt</div>
+                        <div class="proPrice"><span class="afterDis">320.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(214, 'Kính Mắt 1', 320000, '../IMG/p4.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="kinh-mat">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/kinhmat2.png" alt="Kính Mắt 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Kính Gọng Vuông Minimal</div>
+                        <div class="proList text-muted">Kính mắt</div>
+                        <div class="proPrice"><span class="afterDis">280.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(215, 'Kính Mắt 2', 280000, '../IMG/p4.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== GIÀY DÉP (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="giay-dep">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/sandalsberade.jpg" alt="Giày Dép 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Sandal Cao Gót Quai Mảnh</div>
+                        <div class="proList text-muted">Giày dép</div>
+                        <div class="proPrice"><span class="afterDis">450.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(216, 'Giày Dép 1', 450000, '../IMG/p2.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="giay-dep">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/giaydep.png" alt="Giày Dép 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Giày Tây Da Classic</div>
+                        <div class="proList text-muted">Giày dép</div>
+                        <div class="proPrice"><span class="afterDis">390.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(217, 'Giày Dép 2', 390000, '../IMG/p2.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===== PHỤ KIỆN KHÁC (2 sp) ===== -->
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="phu-kien-khac">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/PNJ0000Y001604.png" alt="Phụ Kiện 1" />
+                      <div class="caption text-center">
+                        <div class="proName">Vòng Tay Mạ Vàng Basic</div>
+                        <div class="proList text-muted">Phụ kiện khác</div>
+                        <div class="proPrice"><span class="afterDis">120.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(218, 'Phụ Kiện 1', 120000, '../IMG/watch.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6 product-item" data-category="phu-kien-khac">
+                  <div class="thumbnail card border-0 h-100 shadow-sm rounded-4 overflow-hidden">
+                    <a href="chitietsanpham.html" class="text-decoration-none text-dark">
+                      <img src="../IMG/daychuyen.png" alt="Phụ Kiện 2" />
+                      <div class="caption text-center">
+                        <div class="proName">Dây Chuyền Thiên Nga Đính Đá </div>
+                        <div class="proList text-muted">Phụ kiện khác</div>
+                        <div class="proPrice"><span class="afterDis">160.000đ</span></div>
+                      </div>
+                    </a>
+                    <div class="px-3 pb-3">
+                      <button type="button" class="btn btn-outline-dark btn-sm w-100 mt-2 rounded-pill"
+                        onclick="addToCart(219, 'Phụ Kiện 2', 160000, '../IMG/watch.jpg', this)">
+                        Thêm vào giỏ
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-dark text-light py-5 mt-5">
+      <div class="container">
+        <hr class="my-4 border-secondary" />
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="text-muted mb-0">
+              © 2024 Fashion Store. Thiết kế bởi Sinh Viên. All rights reserved.
+            </p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#" class="text-muted text-decoration-none me-3">Điều khoản</a>
+            <a href="#" class="text-muted text-decoration-none me-3">Chính sách</a>
+            <a href="#" class="text-muted text-decoration-none">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /* ====== FILTER THEO DANH MỤC (list.html?category=...) ====== */
+      function getCategoryFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return (params.get("category") || "").trim();
+      }
+
+      function filterByCategory() {
+        const category = getCategoryFromUrl();
+        if (!category) return;
+
+        document.querySelectorAll(".product-item").forEach((el) => {
+          const c = (el.dataset.category || "").trim();
+          el.style.display = c === category ? "" : "none";
+        });
+      }
+
+      /* ====== GIỎ HÀNG: bấm "Thêm vào giỏ" => tăng số lượng ====== */
+      const CART_KEY = "cart";
+
+      function loadCart() {
+        try {
+          return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveCart(cart) {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      }
+
+      function getCartCount(cart) {
+        return (cart || []).reduce(
+          (sum, item) => sum + (Number(item.quantity) || 0),
+          0,
+        );
+      }
+
+      function syncCartBadges(cart) {
+        const count = getCartCount(cart);
+
+        const navBadge = document.getElementById("nav-cart-count");
+        if (navBadge) navBadge.innerText = String(count);
+
+        document.querySelectorAll(".cart-badge").forEach((el) => {
+          el.innerText = String(count);
+        });
+      }
+
+      function flyCartIconToNav(btnEl) {
+        try {
+          const navIcon = document.getElementById("nav-cart-icon");
+          if (!btnEl || !navIcon) return;
+
+          const b = btnEl.getBoundingClientRect();
+          const c = navIcon.getBoundingClientRect();
+
+          const startX = b.left + b.width / 2;
+          const startY = b.top + b.height / 2;
+
+          const endX = c.left + c.width / 2;
+          const endY = c.top + c.height / 2;
+
+          const dx = endX - startX;
+          const dy = endY - startY;
+
+          const flying = document.createElement("i");
+          flying.className = "bx bx-cart fly-cart-icon";
+
+          flying.style.left = startX + "px";
+          flying.style.top = startY + "px";
+          flying.style.transform = "translate(-50%, -50%) scale(1.15)";
+          flying.style.opacity = "1";
+
+          document.body.appendChild(flying);
+
+          requestAnimationFrame(() => {
+            flying.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.55)`;
+            flying.style.opacity = "0.2";
+          });
+
+          setTimeout(() => flying.remove(), 1550);
+        } catch {}
+      }
+
+      function popCartIcon() {
+        const icon = document.getElementById("nav-cart-icon");
+        if (!icon) return;
+
+        icon.classList.remove("cart-pop");
+        void icon.offsetWidth;
+        icon.classList.add("cart-pop");
+        setTimeout(() => icon.classList.remove("cart-pop"), 200);
+      }
+
+      function addToCart(id, name, price, img, btnEl) {
+        if (btnEl) flyCartIconToNav(btnEl);
+        popCartIcon();
+
+        const cart = loadCart();
+        const existing = cart.find((item) => item.id === id);
+
+        if (existing) {
+          existing.quantity = (Number(existing.quantity) || 0) + 1;
+        } else {
+          cart.push({ id, name, price, quantity: 1, img, selected: true });
+        }
+
+        saveCart(cart);
+        syncCartBadges(cart);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        filterByCategory();
+        syncCartBadges(loadCart());
+      });
+
+      window.addEventListener("storage", (e) => {
+        if (e.key === CART_KEY) syncCartBadges(loadCart());
+      });
+    </script>
+  </body>
+</html>
